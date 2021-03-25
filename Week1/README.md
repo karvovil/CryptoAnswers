@@ -61,7 +61,9 @@ for keylength in range(1,13):
     print(keylength,' : ', rate/keylength)
 
 ```
+
 Which produces following:
+```terminal
 1  :  0.04432011803030402
 2  :  0.047323811018678386
 3  :  0.05382321023803561
@@ -74,7 +76,7 @@ Which produces following:
 10  :  0.04512506012506012
 11  :  0.044707337480446724
 12  :  0.0666289786548806
-
+```
 Looks like 6 is the most propable key length as index of coincidence for english language is around 0,067
 ### Task 2.x
 
