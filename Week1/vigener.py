@@ -1,4 +1,4 @@
-import binascii
+from collections import Counter
 
 def coincidenceRate(string):
     sumx = 0
@@ -7,7 +7,7 @@ def coincidenceRate(string):
     k0 = sumx / ( len(string) * (len(string)-1 ))
     return k0
 
-def shifter(plain, shift):
+def shift(plain, shift):
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     shifted_alphabet = alphabet[shift:] + alphabet[:shift]
     dictionary = str.maketrans(alphabet, shifted_alphabet)
@@ -37,34 +37,39 @@ def freqOrder(keyLength, cipher):
 cipher = 'TRLSHAXRNSVKIENUFMEGRVDANEELHOFNSLUGIEFZVATAAGCIYAGIFADWUDHFYIFPOWVSPUMBKOTUOBYYNQWZYEEHBFCYCRZUKIPDZFFOYDBPZTPRBRVRFRBFYESLSXUAALBFIIAVWORLYBAAIAYGWYVNFLCZKHRVBANDRQFQMEYDHUFNFPCFZVNWSMIENVGQJSZHBFFFGKSBFLVWWORLNQRYFRNODAJIGLCZZNTRTOIYCWCSIACKMFYELOSMUOAHHARSXLTALRVQONZLVWMFFESISOKIIHZKRDQUSEJMNVGELRIHWXCAAFSOFNFWWFLTRVORRIYXFQFFBXFRZEYGWNVLVHJQKHNWWFUORVWORLYICDRCBPAGEIGBKUUERITAITGRRQMEYRDYFRRHTRVCGLJQDENQGFFRRVWEKMNVGELRIHWXCAAFSUGLRDRRFRNUSUEVRQHUFNBICGIDVVQUGLVQODPCHOHGIEGROFKEAGBAKOAOMFFPHCNXVSNQRYRTUEIFRLFRHAKHRVCOZEGDZUDPYLQMKIBQGAWOHUKAIK'
 
 
-
 for keylength in range(1,13):
     rate=0
     for x in range(keylength):
         rate = rate + coincidenceRate(cipher[x::keylength] )
     print(keylength,' : ', rate/keylength)
 
-from collections import Counter
 
-
+keyLength = 6
 
 print('   ')
-from difflib import SequenceMatcher
-import Levenshtein
 
 
-for x in range(26):
-    text = shifter( freqOrder(12,cipher)[1] ,x)
-    similarityRate = SequenceMatcher(None, text[:6], 'ETAION').ratio()
-    lRate = Levenshtein.ratio(text[:6], 'ETAION')
+for step in range(keyLength):
+    biggestCount = 0
+    biggestText = ''
 
- 
-    print(x,' ',text[:6],' ',lRate,' ',similarityRate)
+    for x in range(26):
+        text = shift( freqOrder(6,cipher)[step] ,x)
+        count = 0
+        eta = 'ETAION'
+        for y in text[:6]:
+            if y in eta:
+                count = count +1
 
+        if(count > biggestCount):
+            biggestCount = count
+            biggestX = x
 
-a = freqOrder(12,cipher)
-print ( a)
-print( decrypt(cipher, 'JIRSMEJAT') )
+    print(26-biggestX )
+                
+plain = decrypt(cipher, 'RANXOM')
+print (plain)
 
-#for x in range(6):
-   # print (cipher[x::6])
+plain = decrypt(cipher, 'RANDOM')
+print( plain )
+
