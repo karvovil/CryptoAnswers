@@ -44,7 +44,14 @@ openssl pkey -in oldkey2.pem -pubout -out oldkey2-public.pem
 openssl pkey -in dsa1.pem -pubout -out dsa1-public.pem
 openssl pkey -in dsa2.pem -pubout -out dsa2-public.pem
 ```
-### Task 1.2
+[rsa1.key](rsa1.key) [rsa2.key](rsa2.key)
+
+[esdc1.key](sdc1.key) [esdc2.key](esdc2.key)
+
+[oldkey1.pem](oldkey1.pem) [oldkey2.pem](oldkey2.pem)
+
+[dsa1.pem](dsa1.pem) [dsa2.pem](dsa2.pem)
+
 New commands use PKCS#8 format and old ones use legacy format as seen by the difference between headings
 ```terminal
 cat rsa1.key
@@ -58,36 +65,12 @@ Base64 is used to represent key
 ```terminal
 cat [FILE]
 ```
-Add your work into this template and make every task from the instruction repository to get full points. If screenshots are required, add them into `img` folder, and reference as Markdown allows. If your own code is required, you can add it into this document by using `code blocks`. You can create own `src` folder for all code, in case there is a plenty of it. In general, you have freedom to express your work as you please.
+## Task 2
+```terminal
+openssl req -new -key rsa1.key -out rsa1.csr
+
+openssl req -text -in rsa1.csr -noout
+```
+[rsa1.csr](rsa1.csr)
 
 **Remember to mention/reference all your attachments in this main document!**
-
-You should remove all of the examples and instructions from this document.
-
-
-
-Example code block for Python highlighting:
-
-```python
-# In Python syntax
-print("Hello, World!")
-```
-
-### Task 1.x
-
-Example command in console format:
-```console
-$ for j in {1..9};do echo "Hello $j";done
-```
-
-## Task 2
-
-### Task 2.1
-
-Example image from the other directory. Create own in this directory for the images if they are needed.
-
-![Example image](../.img/python_screenshot.png)
-
-### Task 2.x
-
-## Task x
