@@ -44,13 +44,15 @@ openssl pkey -in oldkey2.pem -pubout -out oldkey2-public.pem
 openssl pkey -in dsa1.pem -pubout -out dsa1-public.pem
 openssl pkey -in dsa2.pem -pubout -out dsa2-public.pem
 ```
-[rsa1.key](rsa1.key) [rsa2.key](rsa2.key)
+Public keys:
 
-[esdc1.key](sdc1.key) [esdc2.key](esdc2.key)
+[rsa1](rsa1-public.key) [rsa2](rsa2-public.key)
 
-[oldkey1.pem](oldkey1.pem) [oldkey2.pem](oldkey2.pem)
+[esdc1](sdc1-public.key) [esdc2](esdc2-public.key)
 
-[dsa1.pem](dsa1.pem) [dsa2.pem](dsa2.pem)
+[oldkey1](oldkey1-public.pem) [oldkey2](oldkey2-public.pem)
+
+[dsa1](dsa1-public.pem) [dsa2](dsa2-public.pem)
 
 New commands use PKCS#8 format and old ones use legacy format as seen by the difference between headings
 ```terminal
