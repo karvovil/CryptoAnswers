@@ -48,7 +48,7 @@ Public keys:
 
 [rsa1](rsa1-public.key) [rsa2](rsa2-public.key)
 
-[esdc1](sdc1-public.key) [esdc2](esdc2-public.key)
+[esdc1](esdc1-public.key) [esdc2](esdc2-public.key)
 
 [oldkey1](oldkey1-public.pem) [oldkey2](oldkey2-public.pem)
 
@@ -75,4 +75,43 @@ openssl req -text -in rsa1.csr -noout
 ```
 [rsa1.csr](rsa1.csr)
 
-**Remember to mention/reference all your attachments in this main document!**
+
+### Task 3
+
+First I created 4 byte key with first two bytes predefined and two random bytes. Then I'm creating a new Blowfish cipher with the key and EAX-mode.
+```python
+from Crypto.Cipher import Blowfish
+from struct import pack
+from Crypto.Random import get_random_bytes
+
+key = b'00' + get_random_bytes(2)
+cipher = Blowfish.new(key, Blowfish.MODE_EAX)
+plaintext = b'Takes about 20 seconds to brute force this open'
+
+```
+Padding is created
+```python
+bs = Blowfish.block_size
+plen = bs - len(plaintext) % bs
+padding = [plen]*plen
+padding = pack('b'*plen, *padding)
+```
+Ciphertext is created. Nonce, MAC-tag and ciphertext are collected as they are needed for brute forcing. Key, plaintext and cipher object are deleted.
+```python
+nonce = cipher.nonce
+ciphertext, tag = cipher.encrypt_and_digest(plaintext + padding)
+del key, plaintext, cipher
+```
+Then all 2^16 possible keys are tried until we find the one that can be used to pass the verification. Finally plaintext is printed(with padding)
+```python
+for n in range(2**16):
+    key = b'00' + n.to_bytes(2, 'little')
+    cipher2 = Blowfish.new(key, Blowfish.MODE_EAX, nonce = nonce)
+    try:
+        plaintext = cipher2.decrypt_and_verify(ciphertext, tag)
+        print("Authentic message:", plaintext)
+        break
+    except ValueError:
+            pass
+```
+In this example I used EAX-mode so I can confirm the right key. Had i not used EAX, some other method would have been needed for verification(hash for example). EAX also requires nonce. To make it a bit simpler I'm also assuming that I know the key length.
