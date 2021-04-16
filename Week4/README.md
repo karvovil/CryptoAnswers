@@ -245,3 +245,46 @@ print(sig.hex())
 hashpump -s '63dcbc1d96c56ce2e470b53ec0334f32f082bfe62fa7e72fcd777da4bb2e6ed8' --data 'username=cryptonator;secret=407c691f79d096412bae2b133e2d053414167042b55928f34a2c15c84210d297;' -a '?????' -k 10-19
 ```
 try all possible keylengths 10-19?
+
+EDIT 16.5
+
+Didn't get it right before deadline but solved it now.
+
+Find out what the guestuser auth cookie has eaten:
+```python
+s = requests.Session()
+s.post('http://0.0.0.0:5000/login', data = {'username':'cryptonator','password':'cryptonator'})
+
+cookie = s.cookies['auth']
+b64_data, b64_sig = cookie.split('.')
+data = b64decode(b64_data)
+sig = b64decode(b64_sig)
+
+print(data.decode())
+print( sig.hex() )
+```
+
+Feed it to the hashpump with our addition('admin' and admin secret). Try with different keysizes (Got lucky with 12)
+```terminal
+hashpump -s '4fa8116f332bf42eeef92f2ceeb18ebf5689ebd1e6094fb0612d0d742eadd7f3' --data 'username=cryptonator;secret=407c691f79d096412bae2b133e2d053414167042b55928f34a2c15c84210d297;' -a ';username=admin;secret=6b337775fce2301772f36e05a10ed9822033a7496520cf24ebe13ed324262c99;' -k 12
+a80a460353ed983ff879526b2587f35e3762769e7381129096519a9b3ed5b7be
+username=cryptonator;secret=407c691f79d096412bae2b133e2d053414167042b55928f34a2c15c84210d297;\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03H;username=admin;secret=6b337775fce2301772f36e05a10ed9822033a7496520cf24ebe13ed324262c99
+```
+Encode the data and create new auth cookie:
+```python
+newdata = b'username=cryptonator;secret=407c691f79d096412bae2b133e2d053414167042b55928f34a2c15c84210d297;\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03H;username=admin;secret=6b337775fce2301772f36e05a10ed9822033a7496520cf24ebe13ed324262c99;'
+newsig = bytes.fromhex('a80a460353ed983ff879526b2587f35e3762769e7381129096519a9b3ed5b7be')
+b64sig = b64encode(newsig).decode()
+b64data = b64encode(newdata).decode()
+
+newAuth = b64data +'.'+ b64sig
+cookies = dict(auth = newAuth)
+
+s2  = requests.Session()
+r = s2.get('http://0.0.0.0:5000/admin/top-secret', cookies = cookies)
+print(r.text)
+```
+Cookie is passed and response printed:
+```terminal
+"Every secret creates a potential failure point." — Bruce Schneier
+```
