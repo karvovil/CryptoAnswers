@@ -51,7 +51,7 @@ for l in newlines:
     print(sha256(l).hexdigest())
 
 
-#f = open("Week7/new_encryption.txt", 'rb')
+#f = open("Week7/new_ciphertexts.txt", 'rb')
 #print(repr(f.read()))
 
 #f = open("Week7/ciphertexts.txt", 'r')
