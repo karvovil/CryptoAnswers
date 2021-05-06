@@ -205,7 +205,7 @@ new6 = ( new1[0]*new4[0]%p,          new1[1]*new4[1]%p          )
 new7 = ( new2[0]*new3[0]*new5[0]%p,  new2[1]*new3[1]*new5[1]%p  )
 new8 = ( new4[0]*new7[0]%p,          new4[1]*new7[1]%p          )
 ```
-Format and write to file. [new_encryption.txt](new_encryption.txt)
+Format and write to file. [new_ciphertexts.txt](new_ciphertexts.txt)
 ```python
 def stringify(line):
     return '('+ str( line[0] ) +', '+ str(line[1]) + ')\n'
